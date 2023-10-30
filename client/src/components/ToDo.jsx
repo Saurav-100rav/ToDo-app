@@ -50,7 +50,7 @@ export default function ToDo() {
 
   return (
     <div className="container">
-      <h1 className="heading">Task  Manager - 3</h1>
+      <h1 className="heading">Task  Manager - 4</h1>
       <div className="input-container">
         <input type="text" id="text" name="data" className="input-task" placeholder="Enter a task" value={info.data} onChange={changeText} />
         <button className="add-button" onClick={addEvent}>Add Task</button>
