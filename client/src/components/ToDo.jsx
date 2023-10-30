@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { addapi, readapi, deleteapi } from './api'
 import {useNavigate } from 'react-router-dom'
 import trash from "./trash.png"
 import edit from "./edit.png"
+import { fetchTasks } from '../store/taskSlice'
+import Loading from "../components/Loader/Loading"
 export default function ToDo() {
 
   const [info, settextValue] = useState({ data: "" });
@@ -10,13 +13,17 @@ export default function ToDo() {
     // const {name,value}=e.target
     settextValue({ [e.target.name]: e.target.value })
   }
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [infoarr, modifylist] = useState([]);
-
+  const {tasks,status} = useSelector(state => state.tasks);
+  const [change,setchange]=useState(true)
+  
   useEffect(() => {
-    displayall();
-  }, [infoarr])
+    // displayall();
+    dispatch(fetchTasks());
+  }, [dispatch,change])
 
   const displayall = async () => {
     const all = await readapi()
@@ -34,6 +41,7 @@ export default function ToDo() {
       else  
         alert(`Error : ${res.data.errors.data.message}`);  
       settextValue({data: "" });
+      setchange((val)=>!val)
     } catch (error) {
       alert("Error while Adding.",error);
       console.log(error);
@@ -50,21 +58,20 @@ export default function ToDo() {
 
   return (
     <div className="container">
-      <h1 className="heading">Task  Manager - 4</h1>
+      <h1 className="heading">ToDo App</h1>
       <div className="input-container">
         <input type="text" id="text" name="data" className="input-task" placeholder="Enter a task" value={info.data} onChange={changeText} />
         <button className="add-button" onClick={addEvent}>Add Task</button>
       </div>
 
       <div className="tasks">
-          {
+          {/* {
             infoarr.map((value)=>{
               return (
                   <div className="task">{
                     console.log(value._id)
                   }
                     <span>{value.data}</span>
-                    {/* <hr /> */}
                     <div className="task-icons">
                         <img src={trash} alt="trash" className="delete-icon"  onClick={()=>deletetask(value._id)}/>
                         <img src={edit} alt="trash" className="edit-icon" onClick={()=>edittask(value._id)}/>
@@ -72,7 +79,24 @@ export default function ToDo() {
                   </div> 
               )
             })
+          } */}
+          {
+              status === 'loading' ? <Loading /> :
+              tasks .map((value)=>{
+                return (
+                    <div className="task">{
+                      console.log(value._id)
+                    }
+                      <span>{value.data}</span>
+                      <div className="task-icons">
+                          <img src={trash} alt="trash" className="delete-icon"  onClick={()=>deletetask(value._id)}/>
+                          <img src={edit} alt="trash" className="edit-icon" onClick={()=>edittask(value._id)}/>
+                      </div>
+                    </div> 
+                )
+              })
           }
+
       </div>
 
       {/* <input type="text" id="text" name="data" value={info.data} onChange={changeText}/> */}
