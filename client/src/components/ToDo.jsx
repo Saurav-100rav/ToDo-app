@@ -4,7 +4,7 @@ import { addapi, readapi, deleteapi } from './api'
 import {useNavigate } from 'react-router-dom'
 import trash from "./trash.png"
 import edit from "./edit.png"
-import { fetchTasks } from '../store/taskSlice'
+import { deleteTasks, fetchTasks } from '../store/taskSlice'
 import Loading from "../components/Loader/Loading"
 export default function ToDo() {
 
@@ -51,12 +51,13 @@ export default function ToDo() {
     navigate(`/edit/${taskid}`)
   }
   const deletetask = async (taskid) => {
-    const res = await deleteapi(taskid)
-    if (res === "Success"){
-      alert("Successfully deleted.")
-      setchange((val)=>!val)
-    }
+    // const res = await deleteapi(taskid)
+    // if (res === "Success"){
+    //   setchange((val)=>!val)
+    //   alert("Successfully deleted.")
       
+    // }
+      dispatch(deleteTasks(taskid));
   }
 
   return (

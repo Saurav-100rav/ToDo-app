@@ -15,10 +15,10 @@ const UserSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    time:{
-        type:Date,
-        default:Date.now().toString()
-    }
+    // time:{
+    //     type:Date,
+    //     default:Date.now().toString()
+    // }
 })
 
 const model = new mongoose.model("Task",UserSchema);

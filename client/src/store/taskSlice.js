@@ -11,6 +11,17 @@ export const fetchTasks = createAsyncThunk('Tasks/fetchTasks', async () => {
   return response.data;
 });
 
+export const deleteTasks = createAsyncThunk('deleteTasks', async (id,{rejectWithValue}) => {
+    try {
+        // const response = await axios.get(`${API_URL}/display/${id}`);
+        // console.log("Data to be deleted",response);
+        const result = await axios.delete(`${API_URL}/delete/${id}`,{method : "DELETE"})
+        return result;
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+  });
+
 const taskSlice = createSlice({
     name : 'Tasks',
     initialState : {
@@ -23,30 +34,48 @@ const taskSlice = createSlice({
             state.tasks.push(action.payload);
         }
     },
-    extraReducers: (builder) => {
-        builder
-          .addCase(fetchTasks.pending, (state) => {
+    extraReducers:  {
+        //   .addCase(fetchTasks.pending, (state) => {
+        //     state.status = 'loading';
+        //   })
+        //   .addCase(fetchTasks.fulfilled, (state, action) => {
+        //     state.status = 'succeeded';
+        //     state.tasks = action.payload;
+        //   })
+        //   .addCase(fetchTasks.rejected, (state, action) => {
+        //     state.status = 'failed';
+        //     state.error = action.error.message;
+        //   }),
+          [fetchTasks.pending] : (state) => {
             state.status = 'loading';
-          })
-          .addCase(fetchTasks.fulfilled, (state, action) => {
+          },
+          [fetchTasks.fulfilled] : (state,action) => {
             state.status = 'succeeded';
             state.tasks = action.payload;
-          })
-          .addCase(fetchTasks.rejected, (state, action) => {
+          },
+          [fetchTasks.rejected] : (state,action) => {
             state.status = 'failed';
             state.error = action.error.message;
-          })
-        //   .addCase(fetchProductDetails.pending, (state) => {
-        //     state.single_product_status = 'loading';
-        //   })
-        //   .addCase(fetchProductDetails.fulfilled, (state, action) => {
-        //     state.single_product_status = 'succeeded';
-        //     state.single_product = action.payload;
-        //   })
-        //   .addCase(fetchProductDetails.rejected, (state, action) => {
-        //     state.single_product_status = 'failed';
-        //     state.single_product_error = action.error.message;
-        //   });
+          },
+          [deleteTasks.pending] : (state) => {
+            state.status = 'loading';
+          },
+          [deleteTasks.fulfilled] : (state,action) => {
+            state.status = 'succeeded';
+            // console.log(action.payload)  a single data will come here which has to be deleted
+            try {
+                const {_id} = action.payload;
+                const allTasks = state.tasks.filter((task)=> task._id !== _id);
+                state.tasks = allTasks;
+                console.log("after deleted",action.payload);
+            } catch (error) {
+                return error;
+            }
+          },
+          [deleteTasks.rejected] : (state,action) => {
+            state.status = 'failed';
+            state.error = action.error.message;
+          }
       },
 })
 
