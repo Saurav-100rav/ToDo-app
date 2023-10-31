@@ -52,8 +52,11 @@ export default function ToDo() {
   }
   const deletetask = async (taskid) => {
     const res = await deleteapi(taskid)
-    if (res === "Success")
+    if (res === "Success"){
       alert("Successfully deleted.")
+      setchange((val)=>!val)
+    }
+      
   }
 
   return (
