@@ -22,6 +22,7 @@ export default function ToDo() {
   
   useEffect(() => {
     // displayall();
+    console.log("reloading")
     dispatch(fetchTasks());
   }, [dispatch,change])
 
@@ -58,6 +59,7 @@ export default function ToDo() {
       
     // }
       dispatch(deleteTasks(taskid));
+      // setchange((val)=>!val)
   }
 
   return (
@@ -84,6 +86,9 @@ export default function ToDo() {
               )
             })
           } */}
+          {
+            // status === 'loading' ? <Loading/> : tasks.length
+          }
           {
               status === 'loading' ? <Loading /> :
               tasks .map((value)=>{

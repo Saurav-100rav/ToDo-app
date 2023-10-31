@@ -16,7 +16,8 @@ export const deleteTasks = createAsyncThunk('deleteTasks', async (id,{rejectWith
         // const response = await axios.get(`${API_URL}/display/${id}`);
         // console.log("Data to be deleted",response);
         const result = await axios.delete(`${API_URL}/delete/${id}`,{method : "DELETE"})
-        return result;
+        console.log(id)
+        return id;
     } catch (error) {
         return rejectWithValue(error)
     }
@@ -64,10 +65,16 @@ const taskSlice = createSlice({
             state.status = 'succeeded';
             // console.log(action.payload)  a single data will come here which has to be deleted
             try {
-                const {_id} = action.payload;
-                const allTasks = state.tasks.filter((task)=> task._id !== _id);
-                state.tasks = allTasks;
+                const id = action.payload;
+                console.log(state.tasks.length);
+                // const allTasks = state.tasks.filter((task)=> task._id !== id);
+                // state.tasks = allTasks;
                 console.log("after deleted",action.payload);
+                state.tasks = state.tasks.filter((val)=> val._id !== id);
+                // state.tasks = [];
+                // state.tasks.map((val)=>{
+                //     console.log(val._id,val._id===id,id);
+                // })
             } catch (error) {
                 return error;
             }
