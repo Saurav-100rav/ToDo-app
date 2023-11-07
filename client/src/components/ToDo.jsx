@@ -91,7 +91,7 @@ export default function ToDo() {
           }
           {
               status === 'loading' ? <Loading /> :
-              tasks .map((value)=>{
+              tasks.map((value)=>{
                 return (
                     <div className="task">{
                       console.log(value._id)
